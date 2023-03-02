@@ -75,11 +75,21 @@ end on
 // the functions below are in reverse order of use
 // start from check_tags. this is a never nesting attempt
 
+
 function reset_temp_array
     // clean up needed at every new sound cycle
     for i.i := 0 to MAX_TAGS-1
         temp_tag_mark[i.i] := 1
     end for
+end function
+
+function print_selection_result
+    // this is just for testing not needed in production
+    if (flag = -1) // search did not find -1 in the array, only matches
+        message("sound " & j.i & " is included")
+    else 
+        message("sound " & j.i & " is NOT included")
+    end if
 end function
 
 function check_if_sound_belongs_to_tag_selection
@@ -96,15 +106,6 @@ function loop_through_tags
             call check_if_sound_belongs_to_tag_selection
         end if
     end for
-end function
-
-function print_selection_result
-    // this is just for testing not needed in production
-    if (flag = -1) // search did not find -1 in the array, only matches
-        message("sound " & j.i & " is included")
-    else 
-        message("sound " & j.i & " is NOT included")
-    end if
 end function
 
 function check_tags
