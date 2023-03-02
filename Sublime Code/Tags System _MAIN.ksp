@@ -1,0 +1,101 @@
+{ #pragma save_compiled_source ../Resources/scripts/SLOT1_MAIN.txt}
+
+on init
+    message("")
+    make_perfview
+    set_ui_height_px        (300)
+    set_control_par         ($INST_ICON_ID,$CONTROL_PAR_HIDE,HIDE_WHOLE_CONTROL)
+
+    declare i.i
+    declare j.i
+
+    declare const SOUND_OFFSET := 8
+    declare sounds[64]
+        sounds[  0]   :=  1  // tag 1
+        sounds[  1]   :=  0  // tag 2
+        sounds[  2]   :=  0  // tag 3
+        sounds[  3]   :=  0  // tag 4
+        sounds[  4]   :=  0  // tag 5
+        sounds[  5]   :=  0  // tag 6
+
+        sounds[  8]   :=  0  // tag 1
+        sounds[  9]   :=  1  // tag 2
+        sounds[ 10]   :=  0  // tag 3
+        sounds[ 11]   :=  0  // tag 4
+        sounds[ 12]   :=  0  // tag 5
+        sounds[ 13]   :=  0  // tag 6
+
+        sounds[ 16]   :=  0  // tag 1
+        sounds[ 17]   :=  0  // tag 2
+        sounds[ 18]   :=  1  // tag 3
+        sounds[ 19]   :=  1  // tag 4
+        sounds[ 20]   :=  0  // tag 5
+        sounds[ 21]   :=  0  // tag 6
+
+        sounds[ 24]   :=  1  // tag 1
+        sounds[ 25]   :=  1  // tag 2
+        sounds[ 26]   :=  0  // tag 3
+        sounds[ 27]   :=  0  // tag 4
+        sounds[ 28]   :=  0  // tag 5
+        sounds[ 29]   :=  1  // tag 6
+
+        sounds[ 32]   :=  1  // tag 1
+        sounds[ 33]   :=  1  // tag 2
+        sounds[ 34]   :=  1  // tag 3
+        sounds[ 35]   :=  1  // tag 4
+        sounds[ 36]   :=  1  // tag 5
+        sounds[ 37]   :=  1  // tag 6
+
+
+    declare filter_result
+    define MAX_TAGS := 6
+    macro buttons_(#n#)
+        declare ui_button tag_#n#
+         tag_#n# -> width := 50
+         tag_#n#-> text := "tag " & #n#
+         move_control_px(tag_#n#, 50 + 60*#n#, 20)
+         tag_#n# -> text_alignment := 1
+    end macro
+    iterate_macro(buttons_) := 0 to MAX_TAGS-1
+    declare tag_ids[MAX_TAGS]
+      tag_ids[0] := get_ui_id(tag_0)
+      tag_ids[1] := get_ui_id(tag_1)
+      tag_ids[2] := get_ui_id(tag_2)
+      tag_ids[3] := get_ui_id(tag_3)
+      tag_ids[4] := get_ui_id(tag_4)
+      tag_ids[5] := get_ui_id(tag_5)
+
+    declare temp_tag_mark[MAX_TAGS] := (1)
+    declare flag
+end on 
+
+function tags
+    message("new round ____________________________")
+    for j.i := 0 to 4 // looping through sounds
+        for i.i := 0 to MAX_TAGS-1 // looping through tags
+            if (get_control_par(tag_ids[i.i], CONTROL_PAR_VALUE) = 1) // if the tag is pressed
+                if (sounds[j.i*SOUND_OFFSET + i.i ] = 1)
+                    temp_tag_mark[i.i] := j.i
+                else 
+                    temp_tag_mark[i.i] := -1
+                end if
+            end if
+        end for
+        flag := search(temp_tag_mark, -1)
+        if (flag = -1) // search did not find -1 in the array, only matches
+            message("sound " & j.i & " is included")
+        else 
+            message("sound " & j.i & " is NOT included")
+        end if
+        for i.i := 0 to 2
+            temp_tag_mark[i.i] := 1
+        end for
+    end for
+end function
+
+macro uicb_tags(#n#)
+    on ui_control (tag_#n#)
+        call tags
+    end on
+end macro
+iterate_macro(uicb_tags) := 0 to MAX_TAGS-1

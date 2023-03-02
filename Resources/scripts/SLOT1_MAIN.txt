@@ -1,0 +1,141 @@
+{ Compiled on Wed Mar  1 21:35:46 2023 }
+on init
+  declare $concat_it
+  declare $concat_offset
+  declare $string_it
+  declare $list_it
+  declare $preproc_i
+  message("")
+  make_perfview
+  set_ui_height_px(300)
+  set_control_par($INST_ICON_ID,$CONTROL_PAR_HIDE,$HIDE_WHOLE_CONTROL)
+  declare $i__i
+  declare $j__i
+  declare const $SOUND_OFFSET := 8
+  declare %sounds[64]
+  %sounds[0] := 1
+  %sounds[1] := 0
+  %sounds[2] := 0
+  %sounds[3] := 0
+  %sounds[4] := 0
+  %sounds[5] := 0
+  %sounds[8] := 0
+  %sounds[9] := 1
+  %sounds[10] := 0
+  %sounds[11] := 0
+  %sounds[12] := 0
+  %sounds[13] := 0
+  %sounds[16] := 0
+  %sounds[17] := 0
+  %sounds[18] := 1
+  %sounds[19] := 1
+  %sounds[20] := 0
+  %sounds[21] := 0
+  %sounds[24] := 1
+  %sounds[25] := 1
+  %sounds[26] := 0
+  %sounds[27] := 0
+  %sounds[28] := 0
+  %sounds[29] := 1
+  %sounds[32] := 1
+  %sounds[33] := 1
+  %sounds[34] := 1
+  %sounds[35] := 1
+  %sounds[36] := 1
+  %sounds[37] := 1
+  declare $filter_result
+  declare ui_button $tag_0
+  set_control_par(get_ui_id($tag_0),$CONTROL_PAR_WIDTH,50)
+  set_control_par_str(get_ui_id($tag_0),$CONTROL_PAR_TEXT,"tag " & 0)
+  move_control_px($tag_0,50+(60*0),20)
+  set_control_par(get_ui_id($tag_0),$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  declare ui_button $tag_1
+  set_control_par(get_ui_id($tag_1),$CONTROL_PAR_WIDTH,50)
+  set_control_par_str(get_ui_id($tag_1),$CONTROL_PAR_TEXT,"tag " & 1)
+  move_control_px($tag_1,50+(60*1),20)
+  set_control_par(get_ui_id($tag_1),$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  declare ui_button $tag_2
+  set_control_par(get_ui_id($tag_2),$CONTROL_PAR_WIDTH,50)
+  set_control_par_str(get_ui_id($tag_2),$CONTROL_PAR_TEXT,"tag " & 2)
+  move_control_px($tag_2,50+(60*2),20)
+  set_control_par(get_ui_id($tag_2),$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  declare ui_button $tag_3
+  set_control_par(get_ui_id($tag_3),$CONTROL_PAR_WIDTH,50)
+  set_control_par_str(get_ui_id($tag_3),$CONTROL_PAR_TEXT,"tag " & 3)
+  move_control_px($tag_3,50+(60*3),20)
+  set_control_par(get_ui_id($tag_3),$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  declare ui_button $tag_4
+  set_control_par(get_ui_id($tag_4),$CONTROL_PAR_WIDTH,50)
+  set_control_par_str(get_ui_id($tag_4),$CONTROL_PAR_TEXT,"tag " & 4)
+  move_control_px($tag_4,50+(60*4),20)
+  set_control_par(get_ui_id($tag_4),$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  declare ui_button $tag_5
+  set_control_par(get_ui_id($tag_5),$CONTROL_PAR_WIDTH,50)
+  set_control_par_str(get_ui_id($tag_5),$CONTROL_PAR_TEXT,"tag " & 5)
+  move_control_px($tag_5,50+(60*5),20)
+  set_control_par(get_ui_id($tag_5),$CONTROL_PAR_TEXT_ALIGNMENT,1)
+  declare %tag_ids[6]
+  %tag_ids[0] := get_ui_id($tag_0)
+  %tag_ids[1] := get_ui_id($tag_1)
+  %tag_ids[2] := get_ui_id($tag_2)
+  %tag_ids[3] := get_ui_id($tag_3)
+  %tag_ids[4] := get_ui_id($tag_4)
+  %tag_ids[5] := get_ui_id($tag_5)
+  declare %temp_tag_mark[6] := (1)
+  declare $flag
+end on
+
+function tags
+  message("new round ____________________________")
+  $j__i := 0
+  while ($j__i<=4)
+    $i__i := 0
+    while ($i__i<6)
+      if (get_control_par(%tag_ids[$i__i],$CONTROL_PAR_VALUE)=1)
+        if (%sounds[$j__i*$SOUND_OFFSET+$i__i]=1)
+          %temp_tag_mark[$i__i] := $j__i
+        else
+          %temp_tag_mark[$i__i] := -1
+        end if
+      end if
+      inc($i__i)
+    end while
+    $flag := search(%temp_tag_mark,-1)
+    if ($flag=-1)
+      message("sound " & $j__i & " is included")
+    else
+      message("sound " & $j__i & " is NOT included")
+    end if
+    $i__i := 0
+    while ($i__i<=2)
+      %temp_tag_mark[$i__i] := 1
+      inc($i__i)
+    end while
+    inc($j__i)
+  end while
+end function
+
+on ui_control($tag_0)
+  call tags
+end on
+
+on ui_control($tag_1)
+  call tags
+end on
+
+on ui_control($tag_2)
+  call tags
+end on
+
+on ui_control($tag_3)
+  call tags
+end on
+
+on ui_control($tag_4)
+  call tags
+end on
+
+on ui_control($tag_5)
+  call tags
+end on
+
